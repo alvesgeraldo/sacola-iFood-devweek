@@ -1,9 +1,14 @@
 package me.dio.sacolaapi.service.impl;
 
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import me.dio.sacolaapi.enumeration.FormaPagamento;
 import me.dio.sacolaapi.model.Item;
+import me.dio.sacolaapi.model.Restaurante;
 import me.dio.sacolaapi.model.Sacola;
+import me.dio.sacolaapi.repository.ItemRepository;
+import me.dio.sacolaapi.repository.ProdutoRepository;
 import me.dio.sacolaapi.repository.SacolaRepository;
 import me.dio.sacolaapi.resource.dto.ItemDto;
 import me.dio.sacolaapi.service.SacolaService;
@@ -12,6 +17,9 @@ import me.dio.sacolaapi.service.SacolaService;
 public class SacolaServiceImpl implements SacolaService {
 
   private final SacolaRepository sacolaRepository;
+  private final ProdutoRepository produtoRepository;
+  private final ItemRepository itemRepository;
+
 
   @Override
   public Sacola fecharSacola(Long id, int numFormaPagamento) {
@@ -33,7 +41,40 @@ public class SacolaServiceImpl implements SacolaService {
 
   @Override
   public Item incluirItemSacola(ItemDto itemDto) {
-    return null;
+    
+    Sacola sacola = verSacola(itemDto.getIdSacola());
+
+    if(sacola.isFechada()){
+      throw new RuntimeException("A sacola está fechada!");
+    }
+
+    Item itemParaSerInserido = Item.builder()
+        .qtde(itemDto.getQtde())
+        .sacola(sacola)
+        .produto(produtoRepository.findById(itemDto.getIdProduto()).orElseThrow(
+          () -> {
+            throw new RuntimeException("Esse produto não existe!");
+          }
+        ))
+        .build();
+
+    List<Item> itens = sacola.getItens();
+    if(itens.isEmpty()){
+      itens.add(itemParaSerInserido);
+    } else {
+      Restaurante restauranteAtual = itens.get(0).getProduto().getRestaurante();
+      Restaurante restauranteNovoProduto = itemParaSerInserido.getProduto().getRestaurante();
+      if(restauranteAtual.equals(restauranteNovoProduto)){
+        itens.add(itemParaSerInserido);
+      } else {
+        throw new RuntimeException("Produtos de restaurante diferentes. Esvazie ou feche a sacola!");
+      }
+    }
+
+    sacolaRepository.save(sacola);
+    itemRepository.save(itemParaSerInserido);
+    return itemParaSerInserido;
+    
   }
 
   @Override
