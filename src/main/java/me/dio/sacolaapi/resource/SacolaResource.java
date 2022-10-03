@@ -30,7 +30,7 @@ public class SacolaResource {
   }
 
   @GetMapping("/{id}")
-  public Sacola verrSacola(@PathVariable("id") Long id){
+  public Sacola verSacola(@PathVariable("id") Long id){
     return sacolaService.verSacola(id);
   }
 

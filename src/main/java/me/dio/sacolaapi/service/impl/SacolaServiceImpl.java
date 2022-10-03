@@ -10,7 +10,6 @@ import me.dio.sacolaapi.enumeration.FormaPagamento;
 import me.dio.sacolaapi.model.Item;
 import me.dio.sacolaapi.model.Restaurante;
 import me.dio.sacolaapi.model.Sacola;
-import me.dio.sacolaapi.repository.ItemRepository;
 import me.dio.sacolaapi.repository.ProdutoRepository;
 import me.dio.sacolaapi.repository.SacolaRepository;
 import me.dio.sacolaapi.resource.dto.ItemDto;
@@ -22,8 +21,6 @@ public class SacolaServiceImpl implements SacolaService {
 
   private final SacolaRepository sacolaRepository;
   private final ProdutoRepository produtoRepository;
-  private final ItemRepository itemRepository;
-
 
   @Override
   public Sacola fecharSacola(Long id, int numFormaPagamento) {
