@@ -1,6 +1,7 @@
 package me.dio.sacolaapi.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import me.dio.sacolaapi.enumeration.FormaPagamento;
 import me.dio.sacolaapi.model.Item;
 import me.dio.sacolaapi.model.Sacola;
 import me.dio.sacolaapi.repository.SacolaRepository;
@@ -13,8 +14,21 @@ public class SacolaServiceImpl implements SacolaService {
   private final SacolaRepository sacolaRepository;
 
   @Override
-  public Sacola fecharSacola(Long id, int formaPagamento) {
-    return null;
+  public Sacola fecharSacola(Long id, int numFormaPagamento) {
+    
+    Sacola sacola = verSacola(id);
+
+    if(sacola.getItens().isEmpty()){
+      throw new RuntimeException("Inclua itens na sacola!");
+    }
+
+    FormaPagamento formaPagamento = numFormaPagamento == 0 ? FormaPagamento.DINHEIRO : FormaPagamento.MAQUINETA;
+
+    sacola.setFormaPagamento(formaPagamento);
+    sacola.setFechada(true);
+
+    return sacolaRepository.save(sacola);
+
   }
 
   @Override
@@ -30,7 +44,7 @@ public class SacolaServiceImpl implements SacolaService {
         throw new RuntimeException("Essa sacola não existe!");
       }
     );
-    
+
   }
   
 }
