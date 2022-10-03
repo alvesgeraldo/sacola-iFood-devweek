@@ -2,6 +2,8 @@ package me.dio.sacolaapi.service.impl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import lombok.RequiredArgsConstructor;
 import me.dio.sacolaapi.enumeration.FormaPagamento;
 import me.dio.sacolaapi.model.Item;
@@ -13,6 +15,7 @@ import me.dio.sacolaapi.repository.SacolaRepository;
 import me.dio.sacolaapi.resource.dto.ItemDto;
 import me.dio.sacolaapi.service.SacolaService;
 
+@Service
 @RequiredArgsConstructor
 public class SacolaServiceImpl implements SacolaService {
 
