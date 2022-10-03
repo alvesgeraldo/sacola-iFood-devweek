@@ -75,7 +75,6 @@ public class SacolaServiceImpl implements SacolaService {
     }
 
     sacolaRepository.save(sacola);
-    itemRepository.save(itemParaSerInserido);
     return itemParaSerInserido;
     
   }
